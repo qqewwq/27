@@ -6,12 +6,15 @@
 
 using namespace std;
 
+// Funkcja do analizy obrazu w formatach PBM i PGM
 void analyzeImage(const string& filename) {
-    ifstream file(filename);
+    ifstream file(filename); // Otwieranie pliku
     string line;
-    int maxPixelValue = -1; // Dla PGM
-    if (file.is_open()) {
-        getline(file, line); // P1 lub P2
+    int maxPixelValue = -1; // Używane tylko dla PGM
+
+    if (file.is_open()) { // Sprawdzenie, czy udało się otworzyć plik
+        getline(file, line); // Odczytanie nagłówka (P1 lub P2)
+        // Sprawdzenie, czy format pliku jest obsługiwany
         if (line != "P1" && line != "P2") {
             cout << "Niepoprawny format pliku." << endl;
             return;
@@ -20,20 +23,23 @@ void analyzeImage(const string& filename) {
         bool isPBM = (line == "P1");
 
         int width, height;
-        file >> width >> height;
+        file >> width >> height; // Odczytanie szerokości i wysokości obrazu
         cout << "Szerokosc obrazu: " << width << endl;
         cout << "Wysokosc obrazu: " << height << endl;
 
+        // Dla formatu PGM, odczytujemy maksymalną wartość piksela
         if (!isPBM) {
-            file >> maxPixelValue; // Maksymalna wartość piksela dla PGM
+            file >> maxPixelValue;
         }
 
-        unordered_map<int, int> colorFrequency;
+        unordered_map<int, int> colorFrequency; // Mapa do przechowywania częstotliwości kolorów
         int pixel;
+        // Odczytywanie i zliczanie wartości pikseli
         while (file >> pixel) {
             colorFrequency[pixel]++;
         }
 
+        // Szukanie najczęściej występującego koloru
         int mostFrequentPixel = -1;
         int maxFrequency = -1;
         for (const auto& kvp : colorFrequency) {
@@ -53,16 +59,16 @@ void analyzeImage(const string& filename) {
 int main() {
     while (true) {
         string filename;
-        cout << "Podaj nazwe pliku: ";
+        cout << "Podaj nazwe pliku: "; // Prośba o podanie nazwy pliku
         cin >> filename;
 
-        analyzeImage(filename);
+        analyzeImage(filename); // Analiza obrazu
 
         string answer;
-        cout << "Czy chcesz wczytac kolejny plik (tak/nie): ";
+        cout << "Czy chcesz wczytac kolejny plik (tak/nie): "; // Pytanie o wczytanie kolejnego pliku
         cin >> answer;
         if (answer != "tak") {
-            break;
+            break; // Jeśli odpowiedź brzmi "nie", zakończ program
         }
     }
 
